@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pic/duoyun.bmp</file>
+        <file>pic/qing.bmp</file>
+        <file>pic/xue.bmp</file>
+        <file>pic/yu.bmp</file>
+        <file>newpics/5.jpg</file>
+    </qresource>
+</RCC>
