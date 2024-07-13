@@ -71,66 +71,40 @@ QString wifiName;
 //static int j = 0;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow), facerec(nullptr)
+    ui(new Ui::MainWindow ), facerec(nullptr)
 {
     ui->setupUi(this);
     ui->tabWidget->setIconSize(QSize(40, 40));
     ui->tabWidget->setTabIcon(ui->tabWidget->indexOf(ui->tabWidget->widget(0)), QIcon(":/newpics/icons8-主页-40.png"));
     ui->tabWidget->setTabIcon(ui->tabWidget->indexOf(ui->tabWidget->widget(1)), QIcon(":/newpics/icons8-夜晚晴间多云-40.png"));
     ui->tabWidget->setTabIcon(ui->tabWidget->indexOf(ui->tabWidget->widget(2)), QIcon(":/newpics/icons8-湿度-40.png"));
-        ui->tabWidget->setTabIcon(ui->tabWidget->indexOf(ui->tabWidget->widget(3)), QIcon(":/newpics/icons8-无线上网-40.png"));
+    ui->tabWidget->setTabIcon(ui->tabWidget->indexOf(ui->tabWidget->widget(3)), QIcon(":/newpics/icons8-无线上网-40.png"));
     ui->tabWidget->setTabIcon(ui->tabWidget->indexOf(ui->tabWidget->widget(4)), QIcon(":/newpics/icons8-电力-40.png"));
     ui->tabWidget->setTabIcon(ui->tabWidget->indexOf(ui->tabWidget->widget(5)), QIcon(":/newpics/icons8-仪表板-40.png"));
     ui->tabWidget->setTabIcon(ui->tabWidget->indexOf(ui->tabWidget->widget(6)), QIcon(":/newpics/icons8-壁挂式摄像机-40.png"));
     ui->tabWidget->setTabIcon(ui->tabWidget->indexOf(ui->tabWidget->widget(7)), QIcon(":/newpics/icons8-上传到云-40.png"));
+    ui->tabWidget->setTabIcon(ui->tabWidget->indexOf(ui->tabWidget->widget(8)), QIcon(":/newpics/icons8-上传到云-40.png"));
     ui->tabWidget->setTabPosition(QTabWidget::West);
-    ui->quitappwifi->setStyleSheet("QPushButton{border:none;outline:none;background-color:transparent;}");
-    ui->quitappwifi->setFixedSize(50,50);
-    ui->quitappwifi->setIcon(QIcon(":/icon/exit2.png"));
-    ui->quitappwifi->setIconSize(QSize(50,50));
-
-    ui->quitappweather->setStyleSheet("QPushButton{border:none;outline:none;background-color:transparent;}");
-    ui->quitappweather->setFixedSize(50,50);
-    ui->quitappweather->setIcon(QIcon(":/icon/exit2.png"));
-    ui->quitappweather->setIconSize(QSize(50,50));
 
     ui->quitapphumiture->setStyleSheet("QPushButton{border:none;outline:none;background-color:transparent;}");
     ui->quitapphumiture->setFixedSize(50,50);
-    ui->quitapphumiture->setIcon(QIcon(":/icon/exit2.png"));
+    ui->quitapphumiture->setIcon(QIcon(":/icon/首页.png"));
     ui->quitapphumiture->setIconSize(QSize(50,50));
-
-    ui->quitappcotrol->setStyleSheet("QPushButton{border:none;outline:none;background-color:transparent;}");
-    ui->quitappcotrol->setFixedSize(50,50);
-    ui->quitappcotrol->setIcon(QIcon(":/icon/exit2.png"));
-    ui->quitappcotrol->setIconSize(QSize(50,50));
 
     ui->quitappabnormal->setStyleSheet("QPushButton{border:none;outline:none;background-color:transparent;}");
     ui->quitappabnormal->setFixedSize(50,50);
-    ui->quitappabnormal->setIcon(QIcon(":/icon/exit2.png"));
+    ui->quitappabnormal->setIcon(QIcon(":/icon/首页.png"));
     ui->quitappabnormal->setIconSize(QSize(50,50));
 
     ui->quitappioT->setStyleSheet("QPushButton{border:none;outline:none;background-color:transparent;}");
     ui->quitappioT->setFixedSize(50,50);
-    ui->quitappioT->setIcon(QIcon(":/icon/exit2.png"));
+    ui->quitappioT->setIcon(QIcon(":/icon/首页.png"));
     ui->quitappioT->setIconSize(QSize(50,50));
-    QMovie *movie = new QMovie(":/newpics/随机姿势.gif");
-    ui->labelgifhome->setMovie(movie);
-    movie->start();
-    QMovie *movie_wifi = new QMovie(":/newpics/头左右.gif");
-    ui->labelgif_wifi->setMovie(movie_wifi);
-    movie_wifi->start();
-    QMovie *movie_weather = new QMovie(":/newpics/进来2.gif");
-    ui->labelgif_weather->setMovie(movie_weather);
-    movie_weather->start();
-    QMovie *movie_env = new QMovie(":/newpics/speak2_start.gif");
-    ui->labelgif_env->setMovie(movie_env);
-    movie_env->start();
-    QMovie *movie_ctrl = new QMovie(":/newpics/头左右.gif");
-    ui->labelgif_ctrl->setMovie(movie_ctrl);
-    movie_ctrl->start();
-    QMovie *movie_auto = new QMovie(":/newpics/speak2_start.gif");
-    ui->labelgif_auto->setMovie(movie_auto);
-    movie_auto->start();
+
+    currentMovie = new QMovie(":/newpics/随机姿势.gif");
+    ui->labelgifhome->setMovie(currentMovie);
+    currentMovie->start();
+//    connect(ui->tabWidget, &QTabWidget::currentChanged, this, MainWindow::onTabChanged);
 //    ui->tabWidget->setStyleSheet("QTabWidget#tabWidget{background-color:rgb(255,0,0);}\
 //                                    QTabBar::tab{background-color:rgb(220,200,180);color:rgb(0,0,0);font:10pt '新宋体'}\
 //                                    QTabBar::tab::selected{background-color:rgb(0,100,200);color:rgb(255,0,0);font:10pt '新宋体'}");
@@ -139,10 +113,15 @@ MainWindow::MainWindow(QWidget *parent) :
 //    led1_off_btnSlot();
 //    led2_off_btnSlot();
 //    led3_off_btnSlot();
+    ui->tabWidget->tabBar()->hide();
+
+    //connect here
+    connect(ui->tabWidget, &QTabWidget::currentChanged, this, &MainWindow::onTabChanged);
     connect(ui->button_home1, &QPushButton::clicked, this, [this](){ui->tabWidget->setCurrentIndex(1);});
-    connect(ui->button_home2, &QPushButton::clicked, this, [this](){ui->tabWidget->setCurrentIndex(2);});
+//    connect(ui->button_home2, &QPushButton::clicked, this, [this](){ui->tabWidget->setCurrentIndex(2);});
     connect(ui->button_startface, &QPushButton::clicked, this, &MainWindow::startFaceRec);
     connect(ui->button_stopface, &QPushButton::clicked, this, &MainWindow::stopFaceRec);
+
     /***************************** 连接wlan模块构造 *********************************/
     WifiDlg = new Set_Wifi(ui->tab_WiFi);
     Get_Wifi_Name();
@@ -262,11 +241,55 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    if (currentMovie != nullptr) {
+        currentMovie->stop();
+        delete currentMovie;
+        currentMovie = nullptr;
+    }
     delete ui;
     if(facerec && facerec->isRunning()) {
         facerec->stop();
         facerec->wait();
     }
+}
+
+void MainWindow::onTabChanged(int index)
+{
+    //touch the tab, change the gif
+    if (currentMovie != nullptr) {
+        currentMovie->stop();
+        delete currentMovie;
+        currentMovie = nullptr;
+    }
+    if (index == ui->tabWidget->indexOf(ui->tabWidget->widget(0))) {
+        currentMovie = new QMovie(":/newpics/随机姿势.gif");
+        ui->labelgifhome->setMovie(currentMovie);
+    }
+    if (index == ui->tabWidget->indexOf(ui->tabWidget->widget(1))) {
+        currentMovie = new QMovie(":/newpics/进来2.gif");
+        ui->labelgif_weather->setMovie(currentMovie);
+    }
+    else if(index == ui->tabWidget->indexOf(ui->tabWidget->widget(2))){
+        currentMovie = new QMovie(":/newpics/speak2_start.gif");
+        ui->labelgif_env->setMovie(currentMovie);
+    }
+    else if(index == ui->tabWidget->indexOf(ui->tabWidget->widget(3))){
+        currentMovie = new QMovie(":/newpics/头左右.gif");
+        ui->labelgif_wifi->setMovie(currentMovie);
+    }
+    else if(index == ui->tabWidget->indexOf(ui->tabWidget->widget(4))){
+        currentMovie = new QMovie(":/newpics/头左右.gif");
+        ui->labelgif_ctrl->setMovie(currentMovie);
+    }
+    else if(index == ui->tabWidget->indexOf(ui->tabWidget->widget(5))){
+        currentMovie = new QMovie(":/newpics/speak2_start.gif");
+        ui->labelgif_auto->setMovie(currentMovie);
+    }
+    else {
+        currentMovie = new QMovie(":/newpics/随机姿势.gif");
+        ui->labelgifhome->setMovie(currentMovie);
+    }
+    currentMovie->start();
 }
 
 void MainWindow::updateImage(const QImage &image) {
@@ -726,6 +749,8 @@ void MainWindow::replyFinished(QNetworkReply *reply)
         strength.remove(0, 8);
         strength.remove(strength.length() - 2, 2);
         QString fengli = object.value("win").toString() + strength;
+
+        wendu = wendu + "℃";
         ui->label_weather_2->setText(weather_type);    //显示天气类型
         ui->label_temperature_2->setText(wendu);
         ui->label_wind_2->setText(fengli);
@@ -781,6 +806,12 @@ void MainWindow::set_humAdtemAdill(QString tem,QString hum,QString ill)
     ui->illTextBrowser->setText(ill);
     ui->humTextBrowser_2->setText(hum);
     ui->temTextBrowser_2->setText(tem);
+    tem = "温度:"+tem+"°C";
+    hum = "湿度:"+hum+"%";
+    ill = "光照:"+ill+"lx";
+    ui->temButton->setText(tem);
+    ui->humButton->setText(hum);
+    ui->illButton->setText(ill);
 }
 //开启/关闭智能检测
 void MainWindow::abn_pushbutton_ONSlot()
@@ -1407,36 +1438,62 @@ void MainWindow::Ioctl(unsigned long cmd, void* arg)
 
 void MainWindow::on_quitappioT_clicked()
 {
-    this->close();
-    QApplication::quit();
+    this->ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::on_quitappabnormal_clicked()
 {
-    this->close();
-    QApplication::quit();
-}
-
-void MainWindow::on_quitappcotrol_clicked()
-{
-    this->close();
-    QApplication::quit();
+    this->ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::on_quitapphumiture_clicked()
 {
-    this->close();
-    QApplication::quit();
+    this->ui->tabWidget->setCurrentIndex(0);
 }
 
-void MainWindow::on_quitappweather_clicked()
+void MainWindow::on_weatherButton_clicked()
 {
-    this->close();
-    QApplication::quit();
+    this->weather_cilcked_Slot();
+    this->ui->tabWidget->setCurrentIndex(1);
 }
 
-void MainWindow::on_quitappwifi_clicked()
+void MainWindow::on_LEDButton_clicked()
 {
-    this->close();
+    this->ui->tabWidget->setCurrentIndex(5);
+}
+
+void MainWindow::on_WLANButton_clicked()
+{
+    this->ui->tabWidget->setCurrentIndex(3);
+}
+
+void MainWindow::on_cameraButton_clicked()
+{
+    this->ui->tabWidget->setCurrentIndex(6);
+}
+
+void MainWindow::on_remoteButton_clicked()
+{
+    this->ui->tabWidget->setCurrentIndex(7);
+}
+
+void MainWindow::on_faceReturnhome_clicked()
+{
+    this->stopFaceRec();
+    this->ui->tabWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_WLANReturnhome_clicked()
+{
+    this->ui->tabWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_weatherReturnhome_clicked()
+{
+    this->ui->tabWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_exitButton_clicked()
+{
     QApplication::quit();
 }

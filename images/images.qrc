@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>calendar.png</file>
+    </qresource>
+    <qresource prefix="/card">
+        <file>weather.png</file>
+        <file>wifi.png</file>
+    </qresource>
+    <qresource prefix="/icon">
+        <file>refresh.png</file>
+        <file>dialog.png</file>
+    </qresource>
+</RCC>

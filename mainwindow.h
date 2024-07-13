@@ -32,7 +32,9 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
+private:
+    /******************************   UI Control Variable  *********************************/
+    QMovie *currentMovie;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -52,6 +54,17 @@ private slots:
     void replyFinished(QNetworkReply *reply); //天气数据处理槽函数
     void weather_cilcked_Slot();
     void set_humAdtemAdill(QString tem,QString hum,QString ill);
+    /******************************   UI   *********************************/
+    void onTabChanged(int index);
+    void on_weatherButton_clicked();
+    void on_WLANButton_clicked();
+    void on_LEDButton_clicked();
+    void on_cameraButton_clicked();
+    void on_exitButton_clicked();
+    void on_remoteButton_clicked();
+    void on_faceReturnhome_clicked();
+    void on_WLANReturnhome_clicked();
+    void on_weatherReturnhome_clicked();
     /******************************    控制模块  *********************************/
     void led1_on_btnSlot();
     void led1_off_btnSlot();
@@ -104,13 +117,8 @@ private slots:
 
      void on_quitappabnormal_clicked();
 
-     void on_quitappcotrol_clicked();
-
      void on_quitapphumiture_clicked();
 
-     void on_quitappweather_clicked();
-
-     void on_quitappwifi_clicked();
 public slots:
      void startFaceRec();
      void stopFaceRec();

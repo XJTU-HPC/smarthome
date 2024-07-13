@@ -62,5 +62,7 @@
         <file>newpics/new环境气泡.png</file>
         <file>newpics/new天气气泡.png</file>
         <file>newpics/cloud1.png</file>
+        <file>newpics/background.jpg</file>
+        <file>icon/首页.png</file>
     </qresource>
 </RCC>

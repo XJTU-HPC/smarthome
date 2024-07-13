@@ -73,10 +73,11 @@ FORMS += \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /home/user/qinian/face_recognition_fast
+else: unix:!android: target.path = /home/user/tanbaby/smarthome
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
     icon.qrc \
+    images/images.qrc \
     pic.qrc \
     qtr.qrc
