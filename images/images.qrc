@@ -5,6 +5,7 @@
     <qresource prefix="/card">
         <file>weather.png</file>
         <file>wifi.png</file>
+        <file>arrow.png</file>
     </qresource>
     <qresource prefix="/icon">
         <file>refresh.png</file>

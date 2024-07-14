@@ -35,6 +35,12 @@ class MainWindow : public QMainWindow
 private:
     /******************************   UI Control Variable  *********************************/
     QMovie *currentMovie;
+    bool livingLED;
+    bool bedLED;
+    bool secbedLED;
+    bool beep;
+    bool remoteconnect;
+    bool autocontrol;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -65,6 +71,13 @@ private slots:
     void on_faceReturnhome_clicked();
     void on_WLANReturnhome_clicked();
     void on_weatherReturnhome_clicked();
+    void on_LEDReturnhome_clicked();
+    /******************************   LEDControl   *********************************/
+    void on_livingLED_clicked();
+    void on_bedLED_clicked();
+    void on_secbedLED_clicked();
+    void on_alarm_clicked();
+    void on_autocontrolButton_clicked();
     /******************************    控制模块  *********************************/
     void led1_on_btnSlot();
     void led1_off_btnSlot();

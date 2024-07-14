@@ -104,6 +104,12 @@ MainWindow::MainWindow(QWidget *parent) :
     currentMovie = new QMovie(":/newpics/随机姿势.gif");
     ui->labelgifhome->setMovie(currentMovie);
     currentMovie->start();
+    beep = false;
+    livingLED = false;
+    bedLED = false;
+    secbedLED = false;
+    remoteconnect = false;
+    autocontrol = false;
 //    connect(ui->tabWidget, &QTabWidget::currentChanged, this, MainWindow::onTabChanged);
 //    ui->tabWidget->setStyleSheet("QTabWidget#tabWidget{background-color:rgb(255,0,0);}\
 //                                    QTabBar::tab{background-color:rgb(220,200,180);color:rgb(0,0,0);font:10pt '新宋体'}\
@@ -159,24 +165,27 @@ MainWindow::MainWindow(QWidget *parent) :
     ill_lv1 = "3";
     ill_lv2 = "2";
     ill_lv3 = "1";
-    lineEdit_led_lv1 =new My_lineEdit(ui->tab_abnormal);
-    lineEdit_led_lv2 =new My_lineEdit(ui->tab_abnormal);
-    lineEdit_led_lv3 =new My_lineEdit(ui->tab_abnormal);
-    lineEdit_fan_tem =new My_lineEdit(ui->tab_abnormal);
+    lineEdit_led_lv1 =new My_lineEdit(ui->tab_control);
+    lineEdit_led_lv2 =new My_lineEdit(ui->tab_control);
+    lineEdit_led_lv3 =new My_lineEdit(ui->tab_control);
+    lineEdit_fan_tem =new My_lineEdit(ui->tab_control);
     lineEdit_led_lv1->setObjectName("lineEdit_led_lv1");
-    lineEdit_led_lv1->setGeometry(QRect(260, 290, 111, 31));
+    lineEdit_led_lv1->setGeometry(QRect(160, 430, 111, 61));
     lineEdit_led_lv1->setText("90");
-    lineEdit_led_lv1->setStyleSheet("background:white;");
+    lineEdit_led_lv1->setAlignment(Qt::AlignCenter); // 设置文字居中对齐
+    lineEdit_led_lv1->setStyleSheet("background:white;font-size:20px;");
     lineEdit_led_lv2->setObjectName("lineEdit_led_lv2");
-    lineEdit_led_lv2->setGeometry(QRect(260, 400, 111, 31));
+    lineEdit_led_lv2->setGeometry(QRect(455, 430, 111, 61));
     lineEdit_led_lv2->setText("60");
-    lineEdit_led_lv2->setStyleSheet("background:white;");
+    lineEdit_led_lv2->setAlignment(Qt::AlignCenter); // 设置文字居中对齐
+    lineEdit_led_lv2->setStyleSheet("background:white;font-size:20px;");
     lineEdit_led_lv3->setObjectName("lineEdit_led_lv3");
-    lineEdit_led_lv3->setGeometry(QRect(260, 510, 111, 31));
+    lineEdit_led_lv3->setGeometry(QRect(750, 430, 111, 61));
     lineEdit_led_lv3->setText("30");
-    lineEdit_led_lv3->setStyleSheet("background:white;");
+    lineEdit_led_lv3->setAlignment(Qt::AlignCenter); // 设置文字居中对齐
+    lineEdit_led_lv3->setStyleSheet("background:white;font-size:20px;");
     lineEdit_fan_tem->setObjectName("lineEdit_fan_tem");
-    lineEdit_fan_tem->setGeometry(QRect(770, 140, 111, 31));
+    lineEdit_fan_tem->setGeometry(QRect(770, 140, 111, 61));
     lineEdit_fan_tem->setText("");
     lineEdit_fan_tem->setStyleSheet("background:transparent;");
     syszuxpinyin_ledlv1 =new SyszuxPinyin();
@@ -1459,7 +1468,7 @@ void MainWindow::on_weatherButton_clicked()
 
 void MainWindow::on_LEDButton_clicked()
 {
-    this->ui->tabWidget->setCurrentIndex(5);
+    this->ui->tabWidget->setCurrentIndex(4);
 }
 
 void MainWindow::on_WLANButton_clicked()
@@ -1474,7 +1483,25 @@ void MainWindow::on_cameraButton_clicked()
 
 void MainWindow::on_remoteButton_clicked()
 {
-    this->ui->tabWidget->setCurrentIndex(7);
+//    this->ui->tabWidget->setCurrentIndex(7);
+    if (this->remoteconnect)
+    {
+        //disconnect
+        this->remoteconnect=false;
+        this->pushButton_connectmqttSlot();
+        ui->remoteButton->setStyleSheet(QString::fromUtf8("border:2px groove gray;border-radius:20px;font-size:24px;background-color: rgba(0, 153, 51, 200); color: #ffffff;"));
+        ui->remoteButton->setText("远程连接");
+    }
+    else
+    {
+        //connect
+        this->remoteconnect=true;
+        this->pushButton_calculateSlot();
+        this->pushButton_connectmqttSlot();
+        ui->remoteButton->setStyleSheet(QString::fromUtf8("border:2px groove gray;border-radius:20px;font-size:24px;background-color: rgba(255, 51, 0, 200); color: #ffffff;"));
+        ui->remoteButton->setText("断开连接");
+
+    }
 }
 
 void MainWindow::on_faceReturnhome_clicked()
@@ -1493,7 +1520,98 @@ void MainWindow::on_weatherReturnhome_clicked()
     this->ui->tabWidget->setCurrentIndex(0);
 }
 
+void MainWindow::on_LEDReturnhome_clicked()
+{
+    this->ui->tabWidget->setCurrentIndex(0);
+}
+
 void MainWindow::on_exitButton_clicked()
 {
     QApplication::quit();
+}
+
+// ************************ LED Control *******************************
+void MainWindow::on_livingLED_clicked()
+{
+
+    if (this->livingLED)
+    {
+        this->led1_off_btnSlot();
+        ui->livingLED->setStyleSheet(QString::fromUtf8("border-radius:20px;font-size:24px;background-color: #ffffff; border:2px groove gray; color: #737373;"));
+        this->livingLED=false;
+    }
+    else
+    {
+        this->led1_on_btnSlot();
+        ui->livingLED->setStyleSheet(QString::fromUtf8("border-radius:20px;font-size:24px;background-color: #6699ff; border:2px groove gray; color: #ffffff;"));
+        this->livingLED=true;
+    }
+}
+
+void MainWindow::on_bedLED_clicked()
+{
+    if (this->bedLED)
+    {
+        this->led2_off_btnSlot();
+        ui->bedLED->setStyleSheet(QString::fromUtf8("border-radius:20px;font-size:24px;background-color: #ffffff; border:2px groove gray; color: #737373;"));
+        this->bedLED=false;
+    }
+    else
+    {
+        this->led2_on_btnSlot();
+        ui->bedLED->setStyleSheet(QString::fromUtf8("border-radius:20px;font-size:24px;background-color: #ff9900; border:2px groove gray; color: #ffffff;"));
+        this->bedLED=true;
+    }
+}
+
+void MainWindow::on_secbedLED_clicked()
+{
+    if (this->secbedLED)
+    {
+        this->led3_off_btnSlot();
+        ui->secbedLED->setStyleSheet(QString::fromUtf8("border-radius:20px;font-size:24px;background-color: #ffffff; border:2px groove gray; color: #737373;"));
+        this->secbedLED=false;
+    }
+    else
+    {
+        this->led3_on_btnSlot();
+        ui->secbedLED->setStyleSheet(QString::fromUtf8("border-radius:20px;font-size:24px;background-color: #9966ff; border:2px groove gray; color: #ffffff;"));
+        this->secbedLED=true;
+    }
+}
+
+void MainWindow::on_alarm_clicked()
+{
+    if (this->beep)
+    {
+        this->beep_off_btnSlot();
+        ui->alarm->setStyleSheet(QString::fromUtf8("border-radius:20px;font-size:24px;background-color: #ffffff; border:2px groove gray; color: #737373;"));
+        this->beep=false;
+    }
+    else
+    {
+        this->beep_on_btnSlot();
+        ui->alarm->setStyleSheet(QString::fromUtf8("border-radius:20px;font-size:24px;background-color: #ff0000; border:2px groove gray; color: #ffffff;"));
+        this->beep=true;
+    }
+}
+
+void MainWindow::on_autocontrolButton_clicked()
+{
+    if (this->autocontrol)
+    {
+        //close autocontrol
+        this->autocontrol = false;
+        this->abn_pushbutton_OFFSlot();
+        ui->autocontrolButton->setStyleSheet(QString::fromUtf8("border:2px groove gray;border-radius:20px;font-size:24px;background-color: rgba(0, 153, 51, 200); color: #ffffff;"));
+        ui->autocontrolButton->setText("开启自动控制");
+    }
+    else
+    {
+        //start autocontrol
+        this->autocontrol = true;
+        this->abn_pushbutton_ONSlot();
+        ui->autocontrolButton->setStyleSheet(QString::fromUtf8("border:2px groove gray;border-radius:20px;font-size:24px;background-color: rgba(255, 51, 0, 200); color: #ffffff;"));
+        ui->autocontrolButton->setText("关闭自动控制");
+    }
 }
