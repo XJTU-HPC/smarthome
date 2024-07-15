@@ -19,12 +19,16 @@
 #include <stdlib.h>
 #include <linux/input.h>
 #include <unistd.h>
+#include <QStringListModel>
 #include "set_wifi.h"
 #include "collentdatathread.h"
 #include "readpe15thread.h"
 #include "login.h"
 #include "register.h"
 #include "facerecthread.h"
+#include "speechrecthread.h"
+#include "erniellm.h"
+#include "chatItem.h"
 namespace Ui {
 class MainWindow;
 }
@@ -41,6 +45,13 @@ private:
     bool beep;
     bool remoteconnect;
     bool autocontrol;
+    ernieLLM *llm;
+    QString usertext;
+    QString llmtext;
+    QStandardItemModel *dialoglist;
+    ChatItemDelegate *chatitem;
+    bool usersaying; //whether now user saying
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -61,6 +72,7 @@ private slots:
     void weather_cilcked_Slot();
     void set_humAdtemAdill(QString tem,QString hum,QString ill);
     /******************************   UI   *********************************/
+    void on_llmButton_clicked();
     void onTabChanged(int index);
     void on_weatherButton_clicked();
     void on_WLANButton_clicked();
@@ -72,12 +84,17 @@ private slots:
     void on_WLANReturnhome_clicked();
     void on_weatherReturnhome_clicked();
     void on_LEDReturnhome_clicked();
+    void on_llmReturnhome_clicked();
     /******************************   LEDControl   *********************************/
     void on_livingLED_clicked();
     void on_bedLED_clicked();
     void on_secbedLED_clicked();
     void on_alarm_clicked();
     void on_autocontrolButton_clicked();
+    /******************************   LLMControl   *********************************/
+    void on_speechButton_pressed();
+    void on_speechButton_released();
+    void handlespeechOutput(QString output);
     /******************************    控制模块  *********************************/
     void led1_on_btnSlot();
     void led1_off_btnSlot();
@@ -140,6 +157,7 @@ public slots:
 private:
     Ui::MainWindow *ui;
     faceRecThread *facerec;
+    speechRecThread *speechThread;
     /****************************** 天气模块 ***************************************/
     //请求句柄
     QNetworkAccessManager *manager;

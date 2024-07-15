@@ -36,7 +36,7 @@
      <enum>QTabWidget::North</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>8</number>
     </property>
     <widget class="QWidget" name="tabhome">
      <property name="sizePolicy">
@@ -244,7 +244,7 @@ background: transparent;</string>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">border:2px groove gray;border-radius:20px;font-size:24px;background-color: rgba(255, 102, 153);</string>
+          <string notr="true">border:2px groove gray;border-radius:20px;font-size:24px;background-color: rgba(255, 102, 153, 240);</string>
          </property>
          <property name="text">
           <string>智能监控</string>
@@ -326,6 +326,22 @@ background: transparent;</string>
          <number>10</number>
         </property>
         <item>
+         <widget class="QPushButton" name="llmButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border:2px groove gray;border-radius:20px;padding:2px 4px;background-color: #6977fc;font-size:22px; color: #ffffff;</string>
+          </property>
+          <property name="text">
+           <string>呼叫飞宝</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="exitButton">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -338,22 +354,6 @@ background: transparent;</string>
           </property>
           <property name="text">
            <string>退出</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="LLMButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border:2px groove gray;border-radius:20px;padding:2px 4px;background-color: #6977fc;font-size:22px; color: #ffffff;</string>
-          </property>
-          <property name="text">
-           <string>呼叫飞宝</string>
           </property>
          </widget>
         </item>
@@ -1811,10 +1811,80 @@ border-style:outset;</string>
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab">
+    <widget class="QWidget" name="tab_llm">
      <attribute name="title">
-      <string>Page</string>
+      <string>llm</string>
      </attribute>
+     <widget class="QWidget" name="horizontalLayoutWidget_9">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>40</y>
+        <width>291</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_11">
+       <item>
+        <widget class="QPushButton" name="pushButton_17">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font-size: 24px; color: #000000; border: none;background: transparent;</string>
+         </property>
+         <property name="text">
+          <string>智慧管家</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="llmReturnhome">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font-size: 24px; color: #8c8c8c; border: none;background: transparent;</string>
+         </property>
+         <property name="text">
+          <string>回到首页</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QPushButton" name="speechButton">
+      <property name="geometry">
+       <rect>
+        <x>590</x>
+        <y>670</y>
+        <width>131</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border:2px groove gray;border-radius:20px;padding:2px 4px;background-color: #6977fc;font-size:22px; color: #ffffff;</string>
+      </property>
+      <property name="text">
+       <string>按住说话</string>
+      </property>
+     </widget>
+     <widget class="QListView" name="dialoglist">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>120</y>
+        <width>1001</width>
+        <height>531</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>

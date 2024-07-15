@@ -24,6 +24,7 @@
 #include <qcryptographichash.h>
 #include <QMovie>
 #include <iostream>
+
 #define BOARD_TYPE_FSMP1A            1
 #define BOARD_TYPE_FSMP1C            2
 #define EXIT_FAN (_IO('f', 7))
@@ -110,6 +111,12 @@ MainWindow::MainWindow(QWidget *parent) :
     secbedLED = false;
     remoteconnect = false;
     autocontrol = false;
+    speechThread = nullptr;
+    usersaying = false;
+    llm = new ernieLLM(this);
+    dialoglist =new QStandardItemModel(this);
+    ui->dialoglist->setModel(dialoglist);
+    ui->dialoglist->setItemDelegate(new ChatItemDelegate(dialoglist));
 //    connect(ui->tabWidget, &QTabWidget::currentChanged, this, MainWindow::onTabChanged);
 //    ui->tabWidget->setStyleSheet("QTabWidget#tabWidget{background-color:rgb(255,0,0);}\
 //                                    QTabBar::tab{background-color:rgb(220,200,180);color:rgb(0,0,0);font:10pt '新宋体'}\
@@ -127,6 +134,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    connect(ui->button_home2, &QPushButton::clicked, this, [this](){ui->tabWidget->setCurrentIndex(2);});
     connect(ui->button_startface, &QPushButton::clicked, this, &MainWindow::startFaceRec);
     connect(ui->button_stopface, &QPushButton::clicked, this, &MainWindow::stopFaceRec);
+    //connect llm
 
     /***************************** 连接wlan模块构造 *********************************/
     WifiDlg = new Set_Wifi(ui->tab_WiFi);
@@ -201,7 +209,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(syszuxpinyin_ledlv3,SIGNAL(sendPinyin(QString)),this,SLOT(abn_confirmString_ledlv3(QString)));
     connect(syszuxpinyin_fan,SIGNAL(sendPinyin(QString)),this,SLOT(abn_confirmString_fan(QString)));
     connect(ui->pushButton_abn_led,SIGNAL(clicked()),this,SLOT(pushButton_abn_ledSlot()));
-
 //    connect(ui->pushButton_abn_fan,SIGNAL(clicked()),this,SLOT(pushButton_abn_fanSlot()));
    /***************************   连接百度云模块  **************************************/
     ui->pushButton_connectmqtt->setEnabled(false);
@@ -260,6 +267,13 @@ MainWindow::~MainWindow()
         facerec->stop();
         facerec->wait();
     }
+    if (speechThread) {
+        speechThread->stop();
+        speechThread->wait();
+        delete speechThread;
+    }
+    delete llm;
+    delete dialoglist;
 }
 
 void MainWindow::onTabChanged(int index)
@@ -1443,7 +1457,10 @@ void MainWindow::Ioctl(unsigned long cmd, void* arg)
         perror("ioctl");
 }
 
-
+void MainWindow::on_llmButton_clicked()
+{
+    this->ui->tabWidget->setCurrentIndex(8);
+}
 
 void MainWindow::on_quitappioT_clicked()
 {
@@ -1524,6 +1541,12 @@ void MainWindow::on_LEDReturnhome_clicked()
 {
     this->ui->tabWidget->setCurrentIndex(0);
 }
+
+void MainWindow::on_llmReturnhome_clicked()
+{
+    this->ui->tabWidget->setCurrentIndex(0);
+}
+
 
 void MainWindow::on_exitButton_clicked()
 {
@@ -1613,5 +1636,109 @@ void MainWindow::on_autocontrolButton_clicked()
         this->abn_pushbutton_ONSlot();
         ui->autocontrolButton->setStyleSheet(QString::fromUtf8("border:2px groove gray;border-radius:20px;font-size:24px;background-color: rgba(255, 51, 0, 200); color: #ffffff;"));
         ui->autocontrolButton->setText("关闭自动控制");
+    }
+}
+
+void MainWindow::on_speechButton_pressed()
+{
+    if (!speechThread) {
+        speechThread = new speechRecThread(this);
+//        speechThread->moveToThread(&speechThread);
+        qDebug() <<"start speech rec\n";
+        connect(speechThread, &speechRecThread::outputReady, this, &MainWindow::handlespeechOutput);
+        speechThread->start();
+    }
+}
+
+void MainWindow::on_speechButton_released()
+{
+    if (speechThread) {
+        speechThread->stop();
+        speechThread->wait();
+        delete speechThread;
+        speechThread = nullptr;
+    }
+//    QStringList list;
+//    list <<"请稍等...";
+//    dialoglist->setStringList(list);
+    usersaying = false;
+    QStandardItem *item = new QStandardItem();
+    item->setData(QIcon(":/icon/refresh.png"), Qt::DecorationRole);  // Replace with actual path to your icon
+    item->setData("请稍等...", Qt::DisplayRole);
+    dialoglist->appendRow(item);
+//    ui->textllm->setPlainText("请稍等...");
+    llmtext = llm->chatErnie(usertext);
+    // 找到并替换相应的条目内容
+    for (int row = 0; row < dialoglist->rowCount(); ++row) {
+        QStandardItem *item = dialoglist->item(row);
+        if (item->data(Qt::DisplayRole).toString() == "请稍等...") {
+            item->setData(QIcon(":/icon/refresh.png"), Qt::DecorationRole);  // 更新图标
+            item->setData(llmtext, Qt::DisplayRole);  // 更新文本
+            break;
+        }
+    }
+//    ui->textllm->setPlainText(llmtext);
+//    list <<llmtext;
+//    dialoglist->setStringList(list);
+}
+
+void MainWindow::handlespeechOutput(QString output)
+{
+//    qDebug() <<"receive";
+    // Split the output into lines
+    QStringList lines = output.split('\n');
+    // Check if there are more than 4 lines
+    if (lines.size() >= 5) {
+        // Remove the first four lines
+        lines = lines.mid(5);
+    }
+    // Check if there are any lines
+    if (!lines.isEmpty()) {
+        // Get the last actual line of speech, ignoring potential empty lines
+        QString lastLine;
+        for (int i = lines.size() - 1; i >= 0; --i) {
+            if (!lines[i].trimmed().isEmpty()) {
+                lastLine = lines[i];
+                break;
+            }
+        }
+        qDebug() <<lastLine;
+        // Extract data after the colon and before any escape sequences
+        QStringList utf8data = lastLine.split("[2K");
+        if (!utf8data.isEmpty()) {
+            QString processedOutput = utf8data.last();
+            usertext = processedOutput;
+//            ui->textuser->setPlainText(processedOutput);
+//            QStringList list;
+//            list <<processedOutput;
+            // 获取最后一行的索引
+            int lastRowIndex = dialoglist->rowCount() - 1;
+            if (lastRowIndex >= 0) {
+                // 获取最后一行的 QStandardItem
+                QStandardItem *lastItem = dialoglist->item(lastRowIndex);
+
+                if (lastItem && usersaying) {
+                    // 更新图标和文本
+                    lastItem->setData(QIcon(":/icon/refresh.png"), Qt::DecorationRole);  // 使用实际的图标路径
+                    lastItem->setData(processedOutput, Qt::DisplayRole);
+                } else {
+                        QStandardItem *newItem = new QStandardItem();
+                        newItem->setData(QIcon(":/icon/refresh.png"), Qt::DecorationRole);  // 使用实际的图标路径
+                        newItem->setData(processedOutput, Qt::DisplayRole);
+                        dialoglist->appendRow(newItem);
+                        usersaying = true;
+                    }
+            } else {
+                // 如果模型为空，则添加第一行
+                QStandardItem *newItem = new QStandardItem();
+                newItem->setData(QIcon(":/icon/refresh.png"), Qt::DecorationRole);  // 使用实际的图标路径
+                newItem->setData(processedOutput, Qt::DisplayRole);
+                dialoglist->appendRow(newItem);
+                usersaying = true;
+            }
+//            dialoglist->setStringList(list);
+            qDebug() << processedOutput;
+        }
+
     }
 }
