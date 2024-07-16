@@ -28,7 +28,7 @@
 #include "facerecthread.h"
 #include "speechrecthread.h"
 #include "erniellm.h"
-#include "chatItem.h"
+#include "chatitemdelegate.h"
 namespace Ui {
 class MainWindow;
 }
@@ -51,7 +51,7 @@ private:
     QStandardItemModel *dialoglist;
     ChatItemDelegate *chatitem;
     bool usersaying; //whether now user saying
-
+    bool agentspeaking;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -91,10 +91,12 @@ private slots:
     void on_secbedLED_clicked();
     void on_alarm_clicked();
     void on_autocontrolButton_clicked();
+    void on_agentspeak_clicked();
     /******************************   LLMControl   *********************************/
     void on_speechButton_pressed();
     void on_speechButton_released();
     void handlespeechOutput(QString output);
+    void on_cleardialog_clicked();
     /******************************    控制模块  *********************************/
     void led1_on_btnSlot();
     void led1_off_btnSlot();

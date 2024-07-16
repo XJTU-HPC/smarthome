@@ -34,6 +34,7 @@ SOURCES += \
     TMtCNN.cpp \
     TRetina.cpp \
     TWarp.cpp \
+    chatitemdelegate.cpp \
     erniellm.cpp \
     facerecthread.cpp \
     collentdatathread.cpp \
@@ -55,7 +56,7 @@ HEADERS += \
     TMtCNN.h \
     TRetina.h \
     TWarp.h \
-    chatItem.h \
+    chatitemdelegate.h \
     erniellm.h \
     facerecthread.h \
     collentdatathread.h \

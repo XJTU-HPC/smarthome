@@ -1862,8 +1862,8 @@ border-style:outset;</string>
      <widget class="QPushButton" name="speechButton">
       <property name="geometry">
        <rect>
-        <x>590</x>
-        <y>670</y>
+        <x>1030</x>
+        <y>650</y>
         <width>131</width>
         <height>61</height>
        </rect>
@@ -1881,8 +1881,52 @@ border-style:outset;</string>
         <x>160</x>
         <y>120</y>
         <width>1001</width>
-        <height>531</height>
+        <height>511</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="cleardialog">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>650</y>
+        <width>40</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>40</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-image:url(:/icon/refresh.png)</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="agentspeak">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>650</y>
+        <width>45</width>
+        <height>42</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>40</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-image:url(:/icon/语音on.png);</string>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </widget>

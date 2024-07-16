@@ -10,5 +10,9 @@
     <qresource prefix="/icon">
         <file>refresh.png</file>
         <file>dialog.png</file>
+        <file>user.png</file>
+        <file>bb8.png</file>
+        <file>语音on.png</file>
+        <file>语音close.png</file>
     </qresource>
 </RCC>
