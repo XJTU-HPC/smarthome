@@ -29,6 +29,8 @@
 #include "speechrecthread.h"
 #include "erniellm.h"
 #include "chatitemdelegate.h"
+#include "agentspeak.h"
+#include "speechplayerthread.h"
 namespace Ui {
 class MainWindow;
 }
@@ -52,6 +54,9 @@ private:
     ChatItemDelegate *chatitem;
     bool usersaying; //whether now user saying
     bool agentspeaking;
+    agentSpeak *agentspeak;
+    bool speakruning;
+    speechPlayerThread *speechplayer;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -97,6 +102,8 @@ private slots:
     void on_speechButton_released();
     void handlespeechOutput(QString output);
     void on_cleardialog_clicked();
+    void onStartedPlaying();
+    void onFinishedPlaying();
     /******************************    控制模块  *********************************/
     void led1_on_btnSlot();
     void led1_off_btnSlot();
@@ -150,6 +157,9 @@ private slots:
      void on_quitappabnormal_clicked();
 
      void on_quitapphumiture_clicked();
+
+signals:
+    void stopSpeechPlayerThread();
 
 public slots:
      void startFaceRec();

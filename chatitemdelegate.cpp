@@ -19,7 +19,7 @@ void ChatItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         fillColor = Qt::white;
     }
 
-    QSize iconSize(30, 30);
+    QSize iconSize(35, 35);
     QRect iconRect(rect.left() + 5,
                    rect.top() + (rect.height() - iconSize.height()) / 2,
                    iconSize.width(),

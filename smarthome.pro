@@ -1,4 +1,4 @@
-QT       += core gui network mqtt sql
+QT       += core gui network mqtt sql multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -34,6 +34,7 @@ SOURCES += \
     TMtCNN.cpp \
     TRetina.cpp \
     TWarp.cpp \
+    agentspeak.cpp \
     chatitemdelegate.cpp \
     erniellm.cpp \
     facerecthread.cpp \
@@ -46,6 +47,7 @@ SOURCES += \
     readpe15thread.cpp \
     register.cpp \
     set_wifi.cpp \
+    speechplayerthread.cpp \
     speechrecthread.cpp \
     syszuxpinyin.cpp
 
@@ -56,6 +58,7 @@ HEADERS += \
     TMtCNN.h \
     TRetina.h \
     TWarp.h \
+    agentspeak.h \
     chatitemdelegate.h \
     erniellm.h \
     facerecthread.h \
@@ -67,6 +70,7 @@ HEADERS += \
     readpe15thread.h \
     register.h \
     set_wifi.h \
+    speechplayerthread.h \
     speechrecthread.h \
     syszuxpinyin.h
 

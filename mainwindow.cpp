@@ -119,6 +119,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->dialoglist->setModel(dialoglist);
     ui->dialoglist->setItemDelegate(new ChatItemDelegate(dialoglist));
     ui->dialoglist->setSpacing(6);
+    agentspeak = new agentSpeak(this);
+    speechplayer = nullptr;
 //    connect(ui->tabWidget, &QTabWidget::currentChanged, this, MainWindow::onTabChanged);
 //    ui->tabWidget->setStyleSheet("QTabWidget#tabWidget{background-color:rgb(255,0,0);}\
 //                                    QTabBar::tab{background-color:rgb(220,200,180);color:rgb(0,0,0);font:10pt '新宋体'}\
@@ -276,6 +278,7 @@ MainWindow::~MainWindow()
     }
     delete llm;
     delete dialoglist;
+    delete agentspeak;
 }
 
 void MainWindow::onTabChanged(int index)
@@ -1508,7 +1511,7 @@ void MainWindow::on_remoteButton_clicked()
         //disconnect
         this->remoteconnect=false;
         this->pushButton_connectmqttSlot();
-        ui->remoteButton->setStyleSheet(QString::fromUtf8("border:2px groove gray;border-radius:20px;font-size:24px;background-color: rgba(s, 200); color: #ffffff;"));
+        ui->remoteButton->setStyleSheet(QString::fromUtf8("border:2px groove gray;border-radius:20px;font-size:24px;background-color: rgba(0, 153, 51, 200); color: #ffffff;"));
         ui->remoteButton->setText("远程连接");
     }
     else
@@ -1643,6 +1646,10 @@ void MainWindow::on_autocontrolButton_clicked()
 
 void MainWindow::on_speechButton_pressed()
 {
+    if (speakruning)
+    {
+        return;
+    }
     ui->speechButton->setStyleSheet("border:2px groove gray;border-radius:20px;padding:2px 4px;background-color: rgba(0, 153, 51, 200);font-size:22px; color: #ffffff;");
     ui->speechButton->setText("正在说话");
     if (!speechThread) {
@@ -1656,6 +1663,10 @@ void MainWindow::on_speechButton_pressed()
 
 void MainWindow::on_speechButton_released()
 {
+    if (speakruning)
+    {
+        return;
+    }
     ui->speechButton->setStyleSheet("border:2px groove gray;border-radius:20px;padding:2px 4px;background-color: #6977fc;font-size:22px; color: #ffffff;");
     ui->speechButton->setText("按住说话");
     if (speechThread) {
@@ -1665,12 +1676,16 @@ void MainWindow::on_speechButton_released()
         speechThread = nullptr;
     }
     usersaying = false;
+    if (false)
+    {
+        //************ 开灯 ******************
+        return ;
+    }
     QStandardItem *item = new QStandardItem();
     item->setData(QIcon(":/icon/bb8.png"), Qt::DecorationRole);  // Replace with actual path to your icon
     item->setData("请稍等...", Qt::DisplayRole);
     item->setData(QColor("#f3f5f7"), Qt::UserRole + 1);  // 设置填充色
     dialoglist->appendRow(item);
-//        return;
     llmtext = llm->chatErnie(usertext);
     // 找到并替换相应的条目内容
     for (int row = 0; row < dialoglist->rowCount(); ++row) {
@@ -1681,6 +1696,16 @@ void MainWindow::on_speechButton_released()
             break;
         }
     }
+    // 滑动窗口并语音播报
+    if (agentspeaking)
+    {
+        speechplayer = new class speechPlayerThread(llmtext, agentspeak, this);
+        connect(speechplayer, &speechPlayerThread::startedPlaying, this, &MainWindow::onStartedPlaying);
+        connect(speechplayer, &speechPlayerThread::finishedPlaying, this, &MainWindow::onFinishedPlaying);
+        connect(speechplayer, &speechPlayerThread::finished, speechplayer, &QObject::deleteLater);
+        speechplayer->start();
+    }
+
 }
 
 void MainWindow::handlespeechOutput(QString output)
@@ -1727,6 +1752,7 @@ void MainWindow::handlespeechOutput(QString output)
                         newItem->setData(QIcon(":/icon/user.png"), Qt::DecorationRole);  // 使用实际的图标路径
                         newItem->setData(processedOutput, Qt::DisplayRole);
                         dialoglist->appendRow(newItem);
+                        ui->dialoglist->scrollToBottom();
                         usersaying = true;
                     }
             } else {
@@ -1754,11 +1780,32 @@ void MainWindow::on_agentspeak_clicked()
     if (agentspeaking)
     {
         agentspeaking = false;
+        if (speechplayer)
+        {
+            connect(this, &MainWindow::stopSpeechPlayerThread, speechplayer, &speechPlayerThread::requestStop);
+            emit stopSpeechPlayerThread();
+            speechplayer->wait();  // 等待线程结束
+            disconnect(this, &MainWindow::stopSpeechPlayerThread, speechplayer, &speechPlayerThread::requestStop);
+            speechplayer = nullptr;
+        }
+        agentspeak->playAudio("audio_off.mp3");
         ui->agentspeak->setStyleSheet("border-image:url(:/icon/语音close.png);");
     }
     else
     {
         agentspeaking = true;
+        agentspeak->playAudio("audio_on.mp3");
         ui->agentspeak->setStyleSheet("border-image:url(:/icon/语音on.png);");
     }
+}
+
+// 槽函数定义
+void MainWindow::onStartedPlaying()
+{
+    speakruning = true;
+}
+
+void MainWindow::onFinishedPlaying()
+{
+    speakruning = false;
 }

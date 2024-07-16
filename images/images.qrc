@@ -15,4 +15,8 @@
         <file>语音on.png</file>
         <file>语音close.png</file>
     </qresource>
+    <qresource prefix="/background">
+        <file>background.png</file>
+        <file>bb8_back.png</file>
+    </qresource>
 </RCC>
