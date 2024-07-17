@@ -46,6 +46,7 @@ SOURCES += \
     objdetectthread.cpp \
     readpe15thread.cpp \
     register.cpp \
+    screensaver.cpp \
     set_wifi.cpp \
     speechplayerthread.cpp \
     speechrecthread.cpp \
@@ -69,6 +70,7 @@ HEADERS += \
     objdetectthread.h \
     readpe15thread.h \
     register.h \
+    screensaver.h \
     set_wifi.h \
     speechplayerthread.h \
     speechrecthread.h \

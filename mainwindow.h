@@ -31,6 +31,8 @@
 #include "chatitemdelegate.h"
 #include "agentspeak.h"
 #include "speechplayerthread.h"
+#include "screensaver.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -57,6 +59,32 @@ private:
     agentSpeak *agentspeak;
     bool speakruning;
     speechPlayerThread *speechplayer;
+    screenSaver* screensaver;
+    QTimer* idleTimer;
+
+protected:
+    void resetIdleTimer() {
+        screensaver->hideSaver();
+//        ui->tabWidget->setCurrentIndex(0);
+//        if (screensaver->isVisible()) {
+//            screensaver->hideSaver();
+//        }
+        idleTimer->start(30000); // 重新启动定时器
+    }
+
+    bool event(QEvent* event) override {
+        // 监听用户所有活动事件
+        switch (event->type()) {
+            case QEvent::MouseMove:
+            case QEvent::MouseButtonPress:
+            case QEvent::KeyPress:
+                resetIdleTimer();
+                break;
+            default:
+                break;
+        }
+        return QWidget::event(event);
+    }
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -104,6 +132,7 @@ private slots:
     void on_cleardialog_clicked();
     void onStartedPlaying();
     void onFinishedPlaying();
+    void showScreenSaver();
     /******************************    控制模块  *********************************/
     void led1_on_btnSlot();
     void led1_off_btnSlot();

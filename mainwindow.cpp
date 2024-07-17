@@ -121,6 +121,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->dialoglist->setSpacing(6);
     agentspeak = new agentSpeak(this);
     speechplayer = nullptr;
+    speakruning = false;
+    // 初始化屏保
+    screensaver = new screenSaver();
+    screensaver->showSaver();
+    // 初始化定时器
+    idleTimer = new QTimer(this);
+    connect(idleTimer, &QTimer::timeout, this, &MainWindow::showScreenSaver);
+    idleTimer->start(30000); // 30秒无操作显示屏保 (根据需求调整时间)
 //    connect(ui->tabWidget, &QTabWidget::currentChanged, this, MainWindow::onTabChanged);
 //    ui->tabWidget->setStyleSheet("QTabWidget#tabWidget{background-color:rgb(255,0,0);}\
 //                                    QTabBar::tab{background-color:rgb(220,200,180);color:rgb(0,0,0);font:10pt '新宋体'}\
@@ -318,6 +326,12 @@ void MainWindow::onTabChanged(int index)
         ui->labelgifhome->setMovie(currentMovie);
     }
     currentMovie->start();
+}
+
+void MainWindow::showScreenSaver()
+{
+    screensaver->showSaver();
+//    this->ui->tabWidget->setCurrentIndex(9);
 }
 
 void MainWindow::updateImage(const QImage &image) {
@@ -1676,16 +1690,26 @@ void MainWindow::on_speechButton_released()
         speechThread = nullptr;
     }
     usersaying = false;
-    if (false)
-    {
-        //************ 开灯 ******************
-        return ;
-    }
     QStandardItem *item = new QStandardItem();
     item->setData(QIcon(":/icon/bb8.png"), Qt::DecorationRole);  // Replace with actual path to your icon
     item->setData("请稍等...", Qt::DisplayRole);
     item->setData(QColor("#f3f5f7"), Qt::UserRole + 1);  // 设置填充色
     dialoglist->appendRow(item);
+    if (usertext.contains("开灯"))
+    {
+        //************ 开灯 ******************
+        llmtext = "飞宝已为你打开";
+        for (int row = 0; row < dialoglist->rowCount(); ++row) {
+            QStandardItem *item = dialoglist->item(row);
+            if (item->data(Qt::DisplayRole).toString() == "请稍等...") {
+                item->setData(llmtext, Qt::DisplayRole);  // 更新文本
+                break;
+            }
+        }
+        agentspeak->playAudio("turn_on.mp3");
+        return ;
+    }
+
     llmtext = llm->chatErnie(usertext);
     // 找到并替换相应的条目内容
     for (int row = 0; row < dialoglist->rowCount(); ++row) {

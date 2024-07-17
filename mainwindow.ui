@@ -1936,6 +1936,14 @@ border-style:outset;</string>
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_start">
+     <property name="styleSheet">
+      <string notr="true">border-image: url(&quot;:/background/background.png&quot;)</string>
+     </property>
+     <attribute name="title">
+      <string>start</string>
+     </attribute>
+    </widget>
    </widget>
   </widget>
  </widget>

@@ -96,8 +96,8 @@ bool read_temperature_humidity(int file_i2c, float &temperature, float &humidity
         return false;
     }
 
-    uint16_t raw_humidity = (data[0] << 8) | data[1];
-    uint16_t raw_temperature = (data[3] << 8) | data[4];
+    uint16_t raw_temperature = (data[0] << 8) | data[1];
+    uint16_t  raw_humidity = (data[3] << 8) | data[4];
 
     // Convert the raw values to actual temperature and humidity
     humidity = 100.0 * (float)raw_humidity / 65535.0;
