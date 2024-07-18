@@ -216,10 +216,10 @@ void CollentdataThread::run()
 //        ill =QString::number(ill_float,'f', 2);
 //        emit send(tem,hum,ill);
 //        sleep(2);
-        if (get_fire_info("gpiochip0", 14) == 1) {
-            std::cout<<"on fire"<<std::endl;
-            emit turn_warn_on("gpiochip0", 14);
-        }
+//        if (get_fire_info("gpiochip0", 14) == 1) {
+//            std::cout<<"on fire"<<std::endl;
+//            emit turn_warn_on("gpiochip0", 14);
+//        }
         int file_i2c = init_i2c("/dev/i2c-2");
         if (file_i2c < 0) {
 //            return 1;

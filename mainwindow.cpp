@@ -160,7 +160,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     /****************************** 启动数据采集线程  ****************************/
     connect(&thread_collentdata,SIGNAL(send(QString,QString,QString)),this,SLOT(set_humAdtemAdill(QString,QString,QString)));
-    connect(&thread_collentdata,SIGNAL(turn_warn_on(const char*, int)),this,SLOT(beep_on_btnSlot()));
+//    connect(&thread_collentdata,SIGNAL(turn_warn_on(const char*, int)),this,SLOT(beep_on_btnSlot()));
     thread_collentdata.start();
 //    /****************************** 启动光电开关线程  ****************************/
 //    connect(&pe15thread,SIGNAL(pesig()),this,SLOT(loginSlot()));
@@ -1017,7 +1017,7 @@ void MainWindow::led1_on_btnSlot()
 "border-style:outset;"));
     ui->pushButton_led1_off->setStyleSheet(QString::fromUtf8("background-image:url(:/icon/disclose.png);\n"
 "border-style:outset;"));
-    turn_led_on("gpiochip4", 11);
+    turn_led_on("gpiochip1", 12);
 }
 void MainWindow::led1_off_btnSlot()
 {
@@ -1026,7 +1026,7 @@ void MainWindow::led1_off_btnSlot()
 "border-style:outset;"));
     ui->pushButton_led1_off->setStyleSheet(QString::fromUtf8("background-image:url(:/icon/close.png);\n"
 "border-style:outset;"));
-    turn_led_off("gpiochip4", 11);
+    turn_led_off("gpiochip1", 12);
 }
 void MainWindow::led2_on_btnSlot()
 { 
@@ -1035,7 +1035,7 @@ void MainWindow::led2_on_btnSlot()
 "border-style:outset;"));
     ui->pushButton_led2_off->setStyleSheet(QString::fromUtf8("background-image:url(:/icon/disclose.png);\n"
 "border-style:outset;"));
-    turn_led_on("gpiochip1", 12);
+    turn_led_on("gpiochip4", 13);
 }
 void MainWindow::led2_off_btnSlot()
 {
@@ -1044,7 +1044,7 @@ void MainWindow::led2_off_btnSlot()
 "border-style:outset;"));
     ui->pushButton_led2_off->setStyleSheet(QString::fromUtf8("background-image:url(:/icon/close.png);\n"
 "border-style:outset;"));
-    turn_led_off("gpiochip1", 12);
+    turn_led_off("gpiochip4", 13);
 }
 void MainWindow::led3_on_btnSlot()
 {
@@ -1053,7 +1053,7 @@ void MainWindow::led3_on_btnSlot()
 "border-style:outset;"));
     ui->pushButton_led3_off->setStyleSheet(QString::fromUtf8("background-image:url(:/icon/disclose.png);\n"
 "border-style:outset;"));
-    turn_led_on("gpiochip1", 1);
+    turn_led_on("gpiochip0", 0);
 }
 void MainWindow::led3_off_btnSlot()
 {
@@ -1062,7 +1062,7 @@ void MainWindow::led3_off_btnSlot()
 "border-style:outset;"));
     ui->pushButton_led3_off->setStyleSheet(QString::fromUtf8("background-image:url(:/icon/close.png);\n"
 "border-style:outset;"));
-    turn_led_off("gpiochip1", 1);
+    turn_led_off("gpiochip0", 0);
 }
 void MainWindow::fan_on_btnSlot()
 {
@@ -1153,7 +1153,7 @@ void MainWindow::beep_on_btnSlot()
 "border-style:outset;"));
     ui->pushButton_beep_off->setStyleSheet(QString::fromUtf8("background-image:url(:/icon/disclose.png);\n"
 "border-style:outset;"));
-    turn_led_off("gpiochip2",10);
+    turn_led_on("gpiochip2",6);
 //    beepring();
 }
 void MainWindow::beep_off_btnSlot()
@@ -1162,7 +1162,7 @@ void MainWindow::beep_off_btnSlot()
 "border-style:outset;"));
     ui->pushButton_beep_off->setStyleSheet(QString::fromUtf8("background-image:url(:/icon/close.png);\n"
 "border-style:outset;"));
-    turn_led_on("gpiochip2",10);
+    turn_led_off("gpiochip2",6);
 //    beepunring();
 }
 /***************************   连接百度云模块  **************************************/
@@ -1706,6 +1706,7 @@ void MainWindow::on_speechButton_released()
                 break;
             }
         }
+        led1_on_btnSlot();
         agentspeak->playAudio("turn_on.mp3");
         return ;
     }

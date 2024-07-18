@@ -85,7 +85,7 @@ FORMS += \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /home/user/tanbaby/smarthome
+else: unix:!android: target.path = /home/user/zhouyh/smarthome
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
