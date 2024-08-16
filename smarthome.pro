@@ -50,7 +50,9 @@ SOURCES += \
     set_wifi.cpp \
     speechplayerthread.cpp \
     speechrecthread.cpp \
-    syszuxpinyin.cpp
+    syszuxpinyin.cpp \
+    widget.cpp \
+    lyrics.cpp
 
 HEADERS += \
     TArcface.h \
@@ -74,14 +76,17 @@ HEADERS += \
     set_wifi.h \
     speechplayerthread.h \
     speechrecthread.h \
-    syszuxpinyin.h
+    syszuxpinyin.h \
+    widget.h \
+    lyrics.h
 
 FORMS += \
     login.ui \
     mainwindow.ui \
     register.ui \
     set_wifi.ui \
-    syszuxpinyin.ui
+    syszuxpinyin.ui \
+    widget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -90,6 +95,7 @@ else: unix:!android: target.path = /home/user/zhouyh/smarthome
 
 RESOURCES += \
     icon.qrc \
+    icons.qrc \
     images/images.qrc \
     pic.qrc \
     qtr.qrc

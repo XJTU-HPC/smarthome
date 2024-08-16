@@ -23,10 +23,11 @@ public:
 public:
     Lyrics(QString lyricsPath);
     Lyrics();
-    bool readLyricsFile(QString lyricsPath);
+    bool readLyricsFile(QString lyricsPath,bool Isequal);
     bool analysisLyricsFile(QString line);
     QList<QString> getListLyricsText() const;
     QList<int> getListLyricsTime() const;
+    int FindThelyrics(qint64 Position) const;
 };
 
 #endif // LYRICS_H

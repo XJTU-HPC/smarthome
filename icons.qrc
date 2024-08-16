@@ -8,6 +8,20 @@
         <file>images/silence.png</file>
         <file>images/stop.png</file>
         <file>images/volume.png</file>
-        <file>images/open.png</file>
+        <file>images/black.bmp</file>
+        <file>pic/音乐播放器-背景.png</file>
+        <file>pic/音乐播放器-背景停止.png</file>
+        <file>pic/音乐播放器-背景播放.png</file>
+        <file>pic/音乐播放器_04.png</file>
+        <file>pic/音乐播放器_08.png</file>
+        <file>pic/音乐播放器_07.png</file>
+        <file>pic/音乐播放器_06.png</file>
+        <file>pic/音乐播放器_05.png</file>
+        <file>pic/音乐播放器_03.png</file>
+        <file>pic/音乐播放器_02.png</file>
+        <file>pic/音乐播放器_01.png</file>
+        <file>pic/exit1.png</file>
+        <file>pic/exit.png</file>
+        <file>pic/_09.png</file>
     </qresource>
 </RCC>

@@ -32,6 +32,7 @@
 #include "agentspeak.h"
 #include "speechplayerthread.h"
 #include "screensaver.h"
+#include "widget.h"
 
 namespace Ui {
 class MainWindow;
@@ -89,6 +90,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
      Set_Wifi *WifiDlg;
+     Widget *musicWidget;
      void Get_Wifi_Name();
      SyszuxPinyin *syszuxpinyin_ledlv1;
      SyszuxPinyin *syszuxpinyin_ledlv2;
@@ -99,6 +101,7 @@ public:
      SyszuxPinyin *syszuxpinyin_iotDevSecret;
      void updateImage(const QImage &image);
 private slots:
+    void showMusicWidget();
     void on_connectBTN_clicked();
     void on_connectBTN_2_clicked();
     void replyFinished(QNetworkReply *reply); //天气数据处理槽函数

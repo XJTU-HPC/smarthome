@@ -450,6 +450,11 @@ background: transparent;</string>
       </property>
       <item>
        <property name="text">
+        <string>烟台</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
         <string>广州</string>
        </property>
       </item>
@@ -473,6 +478,22 @@ background: transparent;</string>
       </property>
       <property name="text">
        <string>IP: </string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="musicButton">
+      <property name="geometry">
+       <rect>
+        <x>630</x>
+        <y>60</y>
+        <width>40</width>
+        <height>35</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-image: url(:/card/music.png);</string>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </widget>
@@ -1942,6 +1963,11 @@ border-style:outset;</string>
      </property>
      <attribute name="title">
       <string>start</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_music">
+     <attribute name="title">
+      <string>Page</string>
      </attribute>
     </widget>
    </widget>

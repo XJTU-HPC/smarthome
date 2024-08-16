@@ -147,7 +147,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->button_startface, &QPushButton::clicked, this, &MainWindow::startFaceRec);
     connect(ui->button_stopface, &QPushButton::clicked, this, &MainWindow::stopFaceRec);
     //connect llm
-
+    connect(ui->musicButton, &QPushButton::clicked, this, &MainWindow::showMusicWidget);
+    musicWidget = new Widget();
+    musicWidget->scanMusicDirectory("/home/user/zhouyh/smarthome/music");
     /***************************** 连接wlan模块构造 *********************************/
     WifiDlg = new Set_Wifi(ui->tab_WiFi);
     Get_Wifi_Name();
@@ -287,6 +289,12 @@ MainWindow::~MainWindow()
     delete llm;
     delete dialoglist;
     delete agentspeak;
+}
+
+void MainWindow::showMusicWidget() {
+    musicWidget->setWindowFlags(Qt::FramelessWindowHint);
+    musicWidget->move(128, 100);
+    musicWidget->show();
 }
 
 void MainWindow::onTabChanged(int index)
@@ -1189,7 +1197,7 @@ void MainWindow::pushButton_calculateSlot()
     deviceSecret = "mqdBApqXmUPApPtd";
     brokerPort = "1883";
     currentTimestamp="0";
-    if(ui->comboBox_city->currentText() =="广州")
+    if(ui->comboBox_city->currentText() =="烟台")
         brokerAddr = brokerAddr.append(ioTCoreld).append(".iot.").append("gz").append(".baidubce.com");
     else
         brokerAddr = brokerAddr.append(ioTCoreld).append(".iot.").append("bj").append(".baidubce.com");
@@ -1708,6 +1716,18 @@ void MainWindow::on_speechButton_released()
         }
         led1_on_btnSlot();
         agentspeak->playAudio("turn_on.mp3");
+        return ;
+    } else if (usertext.contains("音乐"))
+    {
+        llmtext = "音乐播放器已打开";
+        for (int row = 0; row < dialoglist->rowCount(); ++row) {
+            QStandardItem *item = dialoglist->item(row);
+            if (item->data(Qt::DisplayRole).toString() == "请稍等...") {
+                item->setData(llmtext, Qt::DisplayRole);  // 更新文本
+                break;
+            }
+        }
+        emit ui->musicButton->clicked();
         return ;
     }
 
